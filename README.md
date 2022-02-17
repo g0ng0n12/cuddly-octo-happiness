@@ -13,12 +13,20 @@ For building and running the application you need:
 # Endpoints
 
 ## Swagger-UI
-- http://localhost:8090/swagger-ui
+- http://localhost:8090/swagger-ui/#
 
 ## App Health-Check
 - http://localhost:8090/actuator/health
+- 
 ## Postman
-- Kmarket.postman_collection.json file... this file is a Postman Collection v2.1
+- KMARKET.postman_collection.json file... this file is a Postman Collection v2.1
+
+## Checkout Enpoint
+- POST - http://localhost:8090/api/v1/carts/checkout
+- RequestBody Example
+  - {
+       "products" : ["SR1","CF1","GR1"]
+    }
 ----------------------
 ## Running the application locally
 
@@ -37,7 +45,7 @@ the user and pass are the default
 ```
 to check the status of the application please use this url: http://localhost:8090/actuator/health
 
-to see the API endpoints documentation you please check the swagger ui URL: http://localhost:8090/swagger-ui/
+to see the API endpoints documentation you please check the swagger ui URL: http://localhost:8090/swagger-ui/#
 ```
 -------------
 
@@ -88,17 +96,21 @@ I added one integration test that contains the special conditions required
 
 in order to run the integration tests you should run in the command line from the root path:
 ```shell
-mvn integration-test verify  
+ mvn -DSPRING_PROFILE_ACTIVE=integration-test integration-test verify  
 ```
 ### When integration-test ends you will see this.
 ```
-[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 9.186 s - in com.playtomic.tests.wallet.integration.WalletApplicationIT
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.385 s - in com.fx.kmarket.it.KmarketApplicationIT
 ```
 
 ## Running Tests
 In order to run Unit Tests with mocks you should run in the command line from the root path:
 ```shell
 mvn -DSPRING_PROFILE_ACTIVE=test test
+```
+When Finished OK you will see this:
+```shell
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0
 ```
 
 ## Common Issues

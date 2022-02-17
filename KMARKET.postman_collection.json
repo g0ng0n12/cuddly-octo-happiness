@@ -1,0 +1,169 @@
+{
+	"info": {
+		"_postman_id": "d8234c40-f978-41c6-8d38-989fa2c9609a",
+		"name": "KMARKET",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "BuysOneGetsOneFreeGreenTea",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\" : [\"GR1\", \"GR1\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/carts/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "strawberries to get a price discount for bulk purchases",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\" : [\"SR1\",\"SR1\",\"GR1\",\"SR1\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/carts/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Getting the total price when we send one product each",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\" : [\"SR1\",\"CF1\",\"GR1\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/carts/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "buy-one-get-one-free offer and of green tea With Other products",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\" : [\"GR1\", \"SR1\", \"GR1\",\"GR1\",\"CF1\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/carts/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Price of all coffees should drop to two thirds of the original price.",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"products\" : [\"GR1\",\"CF1\",\"SR1\",\"CF1\",\"CF1\"]\n}"
+				},
+				"url": {
+					"raw": "http://localhost:8090/api/v1/carts/checkout",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8090",
+					"path": [
+						"api",
+						"v1",
+						"carts",
+						"checkout"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
