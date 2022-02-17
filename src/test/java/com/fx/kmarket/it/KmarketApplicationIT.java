@@ -45,7 +45,7 @@ public class KmarketApplicationIT extends BaseApiApplication{
                 this.restTemplate.postForEntity(hostUrl,checkoutHttpRequest, CartCheckoutHttpResponse.class);
 
         assertThat(cartCheckoutHttpResponse.getStatusCode(), equalTo(HttpStatus.OK));
-        assertEquals(new BigDecimal("3.11"), cartCheckoutHttpResponse.getBody().getTotalPrice());
+        assertEquals("£3.11", cartCheckoutHttpResponse.getBody().getTotalPrice());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class KmarketApplicationIT extends BaseApiApplication{
                 this.restTemplate.postForEntity(hostUrl,checkoutHttpRequest, CartCheckoutHttpResponse.class);
 
         assertThat(cartCheckoutHttpResponse.getStatusCode(), equalTo(HttpStatus.OK));
-        assertEquals(new BigDecimal("3.11"), cartCheckoutHttpResponse.getBody().getTotalPrice());
+        assertEquals("£22.45", cartCheckoutHttpResponse.getBody().getTotalPrice());
     }
 
     @Test
@@ -83,7 +83,7 @@ public class KmarketApplicationIT extends BaseApiApplication{
                 this.restTemplate.postForEntity(hostUrl,checkoutHttpRequest, CartCheckoutHttpResponse.class);
 
         assertThat(cartCheckoutHttpResponse.getStatusCode(), equalTo(HttpStatus.OK));
-        assertEquals(new BigDecimal("16.61"), cartCheckoutHttpResponse.getBody().getTotalPrice());
+        assertEquals("£16.61", cartCheckoutHttpResponse.getBody().getTotalPrice());
     }
 
     @Test
@@ -101,6 +101,24 @@ public class KmarketApplicationIT extends BaseApiApplication{
                 this.restTemplate.postForEntity(hostUrl,checkoutHttpRequest, CartCheckoutHttpResponse.class);
 
         assertThat(cartCheckoutHttpResponse.getStatusCode(), equalTo(HttpStatus.OK));
-        assertEquals(new BigDecimal("30.57"), cartCheckoutHttpResponse.getBody().getTotalPrice());
+        assertEquals("£30.57", cartCheckoutHttpResponse.getBody().getTotalPrice());
+    }
+
+    @Test
+    @DisplayName("Getting the Total Price when we receive one of each product")
+    public void gettingOneOfEach(){
+        String hostUrl = "http://localhost:" + port + "/api/v1/carts/checkout";
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+
+        List<String> productsHttpRequest =  new ArrayList<>(Arrays.asList("GR1","CF1","SR1"));
+        CartCheckoutHttpRequest checkoutHttpRequest = new CartCheckoutHttpRequest(productsHttpRequest);
+
+        // Checkout
+        ResponseEntity<CartCheckoutHttpResponse> cartCheckoutHttpResponse =
+                this.restTemplate.postForEntity(hostUrl,checkoutHttpRequest, CartCheckoutHttpResponse.class);
+
+        assertThat(cartCheckoutHttpResponse.getStatusCode(), equalTo(HttpStatus.OK));
+        assertEquals("£19.34", cartCheckoutHttpResponse.getBody().getTotalPrice());
     }
 }

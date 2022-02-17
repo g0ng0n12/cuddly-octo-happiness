@@ -13,7 +13,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,24 +30,24 @@ public class CartServiceTest {
     CartServiceImpl cartServiceImpl;
 
     @Test
-    @DisplayName("buy-one-get-one-free offers and of green tea With OtherItems")
+    @DisplayName("buy-one-get-one-free offer and of green tea With Other products")
     public void buyOneGetOneForFreeWithMultipleItems(){
         List<String> productsHttpRequest =  new ArrayList<>(Arrays.asList("GR1", "SR1", "GR1","GR1","CF1"));
         CartCheckoutHttpRequest newCheckoutRequest = new CartCheckoutHttpRequest(productsHttpRequest);
 
-        Product gr1 = new Product("GR1",new BigDecimal("3.11"),"Green Tea");
-        Product sr1 = new Product("SR1",new BigDecimal("5.00"),"Strawberries");
-        Product cf1 = new Product("CF1",new BigDecimal("11.23"),"Coffee");
+        Product gr1 = new Product("GR1",3.11,"Green Tea");
+        Product sr1 = new Product("SR1",5.00,"Strawberries");
+        Product cf1 = new Product("CF1",11.23,"Coffee");
         List<Product> productListMock = new ArrayList<>();
         productListMock.add(gr1);
         productListMock.add(sr1);
         productListMock.add(cf1);
 
-        Mockito.when(productRepository.findAll()).thenReturn(productListMock);
+        Mockito.when(productRepository.findByCodeIn(productsHttpRequest)).thenReturn(productListMock);
 
         CartCheckoutHttpResponse checkoutHttpResponse = cartServiceImpl.checkout(newCheckoutRequest);
 
-        assertEquals(new BigDecimal("22.45"), checkoutHttpResponse.getTotalPrice());
+        assertEquals("£22.45", checkoutHttpResponse.getTotalPrice());
     }
 
     @Test
@@ -57,19 +56,16 @@ public class CartServiceTest {
         List<String> productsHttpRequest =  new ArrayList<>(Arrays.asList("GR1","GR1"));
         CartCheckoutHttpRequest newCheckoutRequest = new CartCheckoutHttpRequest(productsHttpRequest);
 
-        Product gr1 = new Product("GR1",new BigDecimal("3.11"),"Green Tea");
-        Product sr1 = new Product("SR1",new BigDecimal("5.00"),"Strawberries");
-        Product cf1 = new Product("CF1",new BigDecimal("11.23"),"Coffee");
+        Product gr1 = new Product("GR1",3.11,"Green Tea");
+
         List<Product> productListMock = new ArrayList<>();
         productListMock.add(gr1);
-        productListMock.add(sr1);
-        productListMock.add(cf1);
 
-        Mockito.when(productRepository.findAll()).thenReturn(productListMock);
+        Mockito.when(productRepository.findByCodeIn(productsHttpRequest)).thenReturn(productListMock);
 
         CartCheckoutHttpResponse checkoutHttpResponse = cartServiceImpl.checkout(newCheckoutRequest);
 
-        assertEquals(new BigDecimal("3.11"), checkoutHttpResponse.getTotalPrice());
+        assertEquals("£3.11", checkoutHttpResponse.getTotalPrice());
     }
 
     @Test
@@ -78,19 +74,17 @@ public class CartServiceTest {
         List<String> productsHttpRequest =  new ArrayList<>(Arrays.asList("SR1","SR1","GR1","SR1"));
         CartCheckoutHttpRequest newCheckoutRequest = new CartCheckoutHttpRequest(productsHttpRequest);
 
-        Product gr1 = new Product("GR1",new BigDecimal("3.11"),"Green Tea");
-        Product sr1 = new Product("SR1",new BigDecimal("5.00"),"Strawberries");
-        Product cf1 = new Product("CF1",new BigDecimal("11.23"),"Coffee");
+        Product gr1 = new Product("GR1",3.11,"Green Tea");
+        Product sr1 = new Product("SR1",5.00,"Strawberries");
         List<Product> productListMock = new ArrayList<>();
         productListMock.add(gr1);
         productListMock.add(sr1);
-        productListMock.add(cf1);
 
-        Mockito.when(productRepository.findAll()).thenReturn(productListMock);
+        Mockito.when(productRepository.findByCodeIn(productsHttpRequest)).thenReturn(productListMock);
 
         CartCheckoutHttpResponse checkoutHttpResponse = cartServiceImpl.checkout(newCheckoutRequest);
 
-        assertEquals(new BigDecimal("16.61"), checkoutHttpResponse.getTotalPrice());
+        assertEquals("£16.61", checkoutHttpResponse.getTotalPrice());
     }
 
     @Test
@@ -99,19 +93,40 @@ public class CartServiceTest {
         List<String> productsHttpRequest =  new ArrayList<>(Arrays.asList("GR1","CF1","SR1","CF1","CF1"));
         CartCheckoutHttpRequest newCheckoutRequest = new CartCheckoutHttpRequest(productsHttpRequest);
 
-        Product gr1 = new Product("GR1",new BigDecimal("3.11"),"Green Tea");
-        Product sr1 = new Product("SR1",new BigDecimal("5.00"),"Strawberries");
-        Product cf1 = new Product("CF1",new BigDecimal("11.23"),"Coffee");
+        Product gr1 = new Product("GR1",3.11,"Green Tea");
+        Product sr1 = new Product("SR1",5.00,"Strawberries");
+        Product cf1 = new Product("CF1",11.23,"Coffee");
         List<Product> productListMock = new ArrayList<>();
         productListMock.add(gr1);
         productListMock.add(sr1);
         productListMock.add(cf1);
 
-        Mockito.when(productRepository.findAll()).thenReturn(productListMock);
+        Mockito.when(productRepository.findByCodeIn(productsHttpRequest)).thenReturn(productListMock);
 
         CartCheckoutHttpResponse checkoutHttpResponse = cartServiceImpl.checkout(newCheckoutRequest);
 
-        assertEquals(new BigDecimal("30.57"), checkoutHttpResponse.getTotalPrice());
+        assertEquals("£30.57", checkoutHttpResponse.getTotalPrice());
+    }
+
+    @Test
+    @DisplayName("Getting the Total Price when we receive one of each product")
+    public void gettingOneOfEach(){
+        List<String> productsHttpRequest =  new ArrayList<>(Arrays.asList("GR1","CF1","SR1"));
+        CartCheckoutHttpRequest newCheckoutRequest = new CartCheckoutHttpRequest(productsHttpRequest);
+
+        Product gr1 = new Product("GR1",3.11,"Green Tea");
+        Product sr1 = new Product("SR1",5.00,"Strawberries");
+        Product cf1 = new Product("CF1",11.23,"Coffee");
+        List<Product> productListMock = new ArrayList<>();
+        productListMock.add(gr1);
+        productListMock.add(sr1);
+        productListMock.add(cf1);
+
+        Mockito.when(productRepository.findByCodeIn(productsHttpRequest)).thenReturn(productListMock);
+
+        CartCheckoutHttpResponse checkoutHttpResponse = cartServiceImpl.checkout(newCheckoutRequest);
+
+        assertEquals("£19.34", checkoutHttpResponse.getTotalPrice());
     }
 
 }
