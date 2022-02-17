@@ -1,6 +1,6 @@
 # KMarket
 -----------
------------------------
+
 ## Requirements
 
 For building and running the application you need:
@@ -89,11 +89,13 @@ docker image prune -f
 -------------------------
 
 ## Running the Integration Tests
+In This case the Integration tests lifts all the spring context, and the tests are in the KmarketApplicationIT File
 I added one integration test that contains the special conditions required
 - The CEO is a big fan of buy-one-get-one-free offers and of green tea. He wants us to add a rule to do this
 - The COO, though, likes low prices and wants people buying strawberries to get a price discount for bulk purchases. If you buy 3 or more strawberries, the price should drop to £4.50 per strawberry.
 - The CTO is a coffee addict. If you buy 3 or more coffees, the price of all coffees should drop to two thirds of the original price.
 
+Also the Integration tests runs the unit tests.
 in order to run the integration tests you should run in the command line from the root path:
 ```shell
  mvn -DSPRING_PROFILE_ACTIVE=integration-test integration-test verify  
@@ -103,7 +105,8 @@ in order to run the integration tests you should run in the command line from th
 [INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.385 s - in com.fx.kmarket.it.KmarketApplicationIT
 ```
 
-## Running Tests
+## Running Unint Tests
+In this case the Unit tests are in the CartServiceTest File
 In order to run Unit Tests with mocks you should run in the command line from the root path:
 ```shell
 mvn -DSPRING_PROFILE_ACTIVE=test test
