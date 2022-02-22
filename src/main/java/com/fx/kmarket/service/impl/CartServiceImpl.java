@@ -2,7 +2,9 @@ package com.fx.kmarket.service.impl;
 
 import com.fx.kmarket.api.request.CartCheckoutHttpRequest;
 import com.fx.kmarket.api.response.CartCheckoutHttpResponse;
-import com.fx.kmarket.model.OffersEnum;
+import com.fx.kmarket.service.offers.OfferStrategy;
+import com.fx.kmarket.service.offers.OfferStrategyFactory;
+import com.fx.kmarket.service.offers.OffersName;
 import com.fx.kmarket.model.Product;
 import com.fx.kmarket.repository.ProductRepository;
 import com.fx.kmarket.service.CartService;
@@ -20,19 +22,29 @@ import java.util.stream.Collectors;
 @Service
 public class CartServiceImpl implements CartService {
 
-    private Logger log = LoggerFactory.getLogger(CartServiceImpl.class);
-
     private ProductRepository productRepository;
+
+    private OfferStrategyFactory offerStrategyFactory;
+
 
     @Autowired
     public void setProductRepository(ProductRepository productRepository){
         this.productRepository = productRepository;
     }
 
+    @Autowired
+    public void setOfferStrategyFactory( OfferStrategyFactory offerStrategyFactory){
+        this.offerStrategyFactory = offerStrategyFactory;
+    }
+
+
     @Override
     public CartCheckoutHttpResponse checkout(CartCheckoutHttpRequest request) {
 
         List<Product> productsFromDb = productRepository.findByCodeIn(request.getProducts());
+
+        Map<OffersName, OfferStrategy> offersLogic =
+                offerStrategyFactory.findStrategies(request.getProducts());
 
         // Map of Products Key=Code, Value=Price
         Map<String, Double> mapOfProducts = productsFromDb.stream()
@@ -42,16 +54,16 @@ public class CartServiceImpl implements CartService {
         Map<String, Long> groupedProducts = gettingGroupByOfCodeProductsAndQuantityOfEach(request);
 
         //Sending the products obtained from the DB and the total price generated from products to create the response
-        return CartCheckoutMapper.mapToHttpResponse(productsFromDb, gettingTotalPrice(mapOfProducts, groupedProducts));
+        return CartCheckoutMapper.mapToHttpResponse(productsFromDb, gettingTotalPrice(offersLogic, mapOfProducts, groupedProducts));
     }
 
-
     // Reducing the total price from
-    private Double gettingTotalPrice(Map<String, Double> mapOfProducts, Map<String, Long> groupedProducts) {
+    private Double gettingTotalPrice(Map<OffersName, OfferStrategy> offersLogic, Map<String, Double> mapOfProducts, Map<String, Long> groupedProducts) {
         return groupedProducts.entrySet()
                 .stream()
-                .map(item -> OffersEnum.valueOf(item.getKey())
-                        .checkOffer(mapOfProducts.get(item.getKey()), item.getValue()))
+                .map(item ->
+                        offersLogic.get(OffersName.valueOf(item.getKey()))
+                            .applyOffer(mapOfProducts.get(item.getKey()), item.getValue()))
                 .reduce(0.0, Double::sum);
     }
 

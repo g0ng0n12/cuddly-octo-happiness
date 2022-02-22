@@ -5,6 +5,12 @@ import com.fx.kmarket.api.response.CartCheckoutHttpResponse;
 import com.fx.kmarket.model.Product;
 import com.fx.kmarket.repository.ProductRepository;
 import com.fx.kmarket.service.impl.CartServiceImpl;
+import com.fx.kmarket.service.offers.OfferStrategy;
+import com.fx.kmarket.service.offers.OfferStrategyFactory;
+import com.fx.kmarket.service.offers.impl.CfOneOfferStrategyImpl;
+import com.fx.kmarket.service.offers.impl.GrOneOfferStrategyImpl;
+import com.fx.kmarket.service.offers.impl.SrOneOfferStrategyImpl;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -13,9 +19,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -26,8 +30,21 @@ public class CartServiceTest {
     @Mock
     ProductRepository productRepository;
 
+
     @InjectMocks
     CartServiceImpl cartServiceImpl;
+
+    @BeforeEach
+    void init()  {
+        OfferStrategy cfOneOfferImpl = new CfOneOfferStrategyImpl();
+        OfferStrategy grOneOfferImpl = new GrOneOfferStrategyImpl();
+        OfferStrategy srOneOfferImpl = new SrOneOfferStrategyImpl();
+        Set<OfferStrategy> offerStrategySet = new HashSet<>();
+        offerStrategySet.add(cfOneOfferImpl);
+        offerStrategySet.add(grOneOfferImpl);
+        offerStrategySet.add(srOneOfferImpl);
+        cartServiceImpl.setOfferStrategyFactory(new OfferStrategyFactory(offerStrategySet));
+    }
 
     @Test
     @DisplayName("buy-one-get-one-free offer and of green tea With Other products")
