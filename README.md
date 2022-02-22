@@ -119,3 +119,8 @@ When Finished OK you will see this:
 ## Common Issues
     1. When you run docker-compose up... if you see warnings like this: WARN[0000] The "MYSQL_USER" variable, you should create the .env file
     2. we need to improve the Docker Creation for the Release, since we're having SQL issues.
+    
+## Implementations
+    1. In the main branch the offers business logic is handle in an enum
+    2. In the strategy-offer branch the offers business logic is handle using a strategy pattern.
+    2. In the functional-implementation branch the offers business logic is handle using java functional features (Work in progress)
